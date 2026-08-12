@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mithila Cricket</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    font-family:Arial,sans-serif;
+    background:#f4f6f8;
+    color:#17202a;
+    padding-bottom:75px;
+}
+
+.header{
+    background:linear-gradient(135deg,#071d3a,#0b5ed7);
+    color:white;
+    padding:25px 20px 30px;
+    border-radius:0 0 25px 25px;
+}
+
+.header-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.logo{
+    font-size:25px;
+    font-weight:bold;
+}
+
+.profile{
+    background:rgba(255,255,255,.18);
+    padding:10px;
+    border-radius:50%;
+}
+
+.subtitle{
+    margin-top:15px;
+    opacity:.9;
+    font-size:14px;
+}
+
+.container{
+    padding:18px;
+}
+
+.section-title{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin:20px 0 12px;
+}
+
+.section-title h2{
+    font-size:19px;
+}
+
+.section-title span{
+    color:#0b5ed7;
+    font-size:13px;
+}
+
+.match-card{
+    background:white;
+    border-radius:18px;
+    padding:18px;
+    box-shadow:0 5px 18px rgba(0,0,0,.07);
+}
+
+.match-top{
+    display:flex;
+    justify-content:space-between;
+    font-size:12px;
+    color:#667085;
+    margin-bottom:15px;
+}
+
+.teams{
+    display:flex;
+    justify-content:space-around;
+    align-items:center;
+    text-align:center;
+}
+
+.team{
+    width:40%;
+}
+
+.team-icon{
+    width:55px;
+    height:55px;
+    border-radius:50%;
+    background:#e8f0ff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin:auto;
+    font-size:25px;
+}
+
+.vs{
+    font-weight:bold;
+    color:#777;
+}
+
+.buttons{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+    margin-top:18px;
+}
+
+button{
+    border:none;
+    padding:13px;
+    border-radius:12px;
+    font-weight:bold;
+    font-size:14px;
+}
+
+.primary{
+    background:#0b5ed7;
+    color:white;
+}
+
+.secondary{
+    background:#eaf1ff;
+    color:#0b5ed7;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+}
+
+.card{
+    background:white;
+    border-radius:17px;
+    padding:18px;
+    box-shadow:0 4px 14px rgba(0,0,0,.06);
+}
+
+.icon{
+    font-size:28px;
+    margin-bottom:10px;
+}
+
+.card h3{
+    font-size:16px;
+    margin-bottom:5px;
+}
+
+.card p{
+    font-size:12px;
+    color:#667085;
+}
+
+.support{
+    background:linear-gradient(135deg,#073b4c,#118ab2);
+    color:white;
+    border-radius:18px;
+    padding:20px;
+}
+
+.support p{
+    font-size:13px;
+    margin:8px 0 15px;
+    opacity:.9;
+}
+
+.nav{
+    position:fixed;
+    z-index:9999;
+    bottom:0;
+    left:0;
+    right:0;
+    height:68px;
+    background:white;
+    display:flex;
+    justify-content:space-around;
+    align-items:center;
+    box-shadow:0 -4px 15px rgba(0,0,0,.1);
+}
+
+.nav-item{
+    text-align:center;
+    font-size:11px;
+    color:#667085;
+}
+
+.nav-item.active{
+    color:#0b5ed7;
+    font-weight:bold;
+}
+
+.nav-icon{
+    display:block;
+    font-size:21px;
+    margin-bottom:3px;
+}
+</style>
+</head>
+
+<body>
+<div id="jsTest" style="position:fixed;top:0;left:0;right:0;z-index:10000;background:#111;color:white;text-align:center;padding:8px;font-size:13px;">JavaScript test: loading...</div>
+
+
+<header class="header">
+
+    <div class="header-top">
+        <div class="logo">
+  <svg width="48" height="48" viewBox="0 0 100 100" aria-label="Mithila Cricket logo">
+    <circle cx="50" cy="50" r="47" fill="#071d3a" stroke="#f5c542" stroke-width="4"/>
+    <path d="M22 67 L42 38 L48 43 L30 72 Z" fill="#c98b3c"/>
+    <path d="M78 67 L58 38 L52 43 L70 72 Z" fill="#c98b3c"/>
+    <circle cx="50" cy="61" r="15" fill="#d62828"/>
+    <path d="M42 61 Q50 53 58 61 Q50 69 42 61" fill="none" stroke="white" stroke-width="2"/>
+    <path d="M50 20 L54 28 L63 29 L56 35 L58 44 L50 40 L42 44 L44 35 L37 29 L46 28 Z" fill="#f5c542"/>
+  </svg>
+</div>
+        <div class="profile">👤</div>
+    </div>
+
+    <div class="subtitle">
+        Har Gaon Se Ek Champion 🇮🇳
+    </div>
+
+</header>
+
+<main class="container">
+
+    <div class="section-title">
+        <h2>🔥 Upcoming Match</h2>
+        <span>View All</span>
+    </div>
+
+    <div class="match-card">
+
+        <div class="match-top">
+            <span>Friendly Match</span>
+            <span>Sunday • 10:00 AM</span>
+        </div>
+
+        <div class="teams">
+
+            <div class="team">
+                <div class="team-icon">🏏</div>
+                <strong>Mithila CC</strong>
+                <p>Madhubani</p>
+            </div>
+
+            <div class="vs">VS</div>
+
+            <div class="team">
+                <div class="team-icon">🏏</div>
+                <strong>Opponent</strong>
+                <p>Nearby Team</p>
+            </div>
+
+        </div>
+
+        <div class="buttons">
+            <button class="primary">Match Details</button>
+            <button class="secondary">📍 Location</button>
+        </div>
+
+    </div>
+
+
+    <div class="section-title">
+        <h2>🏏 Cricket</h2>
+    </div>
+
+    <div class="grid">
+
+        <div class="card">
+            <div class="icon">👥</div>
+            <h3>Teams</h3>
+            <p>Nearby cricket teams खोजें</p>
+        </div>
+
+        <div class="card">
+            <div class="icon">⭐</div>
+            <h3>Players</h3>
+            <p>Players और performance देखें</p>
+        </div>
+
+        <div class="card">
+            <div class="icon">🔎</div>
+            <h3>Find Match</h3>
+            <p>अपनी team के लिए match खोजें</p>
+        </div>
+
+        <div class="card">
+            <div class="icon">🏆</div>
+            <h3>Tournaments</h3>
+            <p>Local tournaments देखें</p>
+        </div>
+
+    </div>
+
+
+    <div class="section-title">
+        <h2>📊 Quick Stats</h2>
+    </div>
+
+    <div class="grid">
+
+        <div class="card">
+            <div class="icon">🏏</div>
+            <h3>0</h3>
+            <p>Total Matches</p>
+        </div>
+
+        <div class="card">
+            <div class="icon">👥</div>
+            <h3>0</h3>
+            <p>Registered Players</p>
+        </div>
+
+    </div>
+
+
+    <div class="section-title">
+        <h2>🤝 Support</h2>
+    </div>
+
+    <div class="support">
+
+        <h2>Support Mithila Cricket 🏏</h2>
+
+        <p>
+            आपका छोटा सा सहयोग ग्रामीण खिलाड़ियों के
+            cricket equipment और activities में मदद करेगा।
+        </p>
+
+        <button class="primary">
+            💙 Support / Donation
+        </button>
+
+    </div>
+
+</main>
+
+
+<nav class="nav" id="bottomNav">
+
+    <div class="nav-item active" data-page="home">
+        <span class="nav-icon">🏠</span>
+        Home
+    </div>
+
+    <div class="nav-item" data-page="matches">
+        <span class="nav-icon">🏏</span>
+        Matches
+    </div>
+
+    <div class="nav-item" data-page="teams">
+        <span class="nav-icon">👥</span>
+        Teams
+    </div>
+
+    <div class="nav-item" data-page="players">
+        <span class="nav-icon">⭐</span>
+        Players
+    </div>
+
+    <div class="nav-item" data-page="profile">
+        <span class="nav-icon">👤</span>
+        Profile
+    </div>
+
+</nav>
+
+
+<script>
+document.getElementById('jsTest').textContent = 'JavaScript: WORKING ✓';
+document.getElementById('jsTest').onclick = () => alert('Touch + JavaScript WORKING');
+
+const main = document.querySelector('main');
+const navItems = document.querySelectorAll('#bottomNav .nav-item');
+
+const pages = {
+  matches: `
+    <div class="section-title"><h2>🏏 Matches</h2></div>
+    <div class="card"><h3>Upcoming Matches</h3><p>अभी कोई upcoming match नहीं है।</p></div>
+    <div class="card"><h3>Previous Matches</h3><p>Match history यहाँ दिखाई जाएगी।</p></div>
+  `,
+
+  teams: `
+    <div class="section-title"><h2>👥 Teams</h2></div>
+    <div class="card"><h3>Mithila Cricket Teams</h3><p>Teams की जानकारी यहाँ दिखाई जाएगी।</p></div>
+  `,
+
+  players: `
+    <div class="section-title"><h2>⭐ Players</h2></div>
+    <div class="card"><h3>Players</h3><p>Players और उनके profiles यहाँ दिखाई देंगे।</p></div>
+  `,
+
+  profile: `
+    <div class="section-title"><h2>👤 Profile</h2></div>
+
+    <div class="card">
+      <h3>🔐 Admin Login</h3>
+      <p>Admin account से login करने के लिए नीचे जाएँ।</p>
+      <button class="primary" id="loginBtn">Login</button>
+    </div>
+
+    <div class="card" id="loginBox" style="display:none;">
+      <input id="adminEmail" type="email"
+        placeholder="Admin Email"
+        style="width:100%;padding:12px;margin:6px 0;border:1px solid #ddd;border-radius:10px;">
+
+      <input id="adminPassword" type="password"
+        placeholder="Password"
+        style="width:100%;padding:12px;margin:6px 0;border:1px solid #ddd;border-radius:10px;">
+
+      <button class="primary" id="loginSubmit">Login</button>
+      <p id="loginMessage" style="margin-top:10px;"></p>
+    </div>
+
+    <div class="card">
+      <h3>📞 Contact</h3>
+      <p>📧 drprakashji7667@gmail.com</p>
+      <p>📱 +91 91962 75188</p>
+      <button class="primary" id="whatsappBtn">WhatsApp</button>
+      <button class="secondary" id="emailBtn">Email</button>
+    </div>
+  `,
+
+  donation: `
+    <div class="section-title"><h2>💙 Support Mithila Cricket</h2></div>
+
+    <div class="card">
+      <h3>🤝 आपका सहयोग</h3>
+      <p>ग्रामीण खिलाड़ियों और cricket activities को support करने के लिए donation कर सकते हैं।</p>
+
+      <div style="margin:18px 0;padding:20px;background:#f4f6f8;border-radius:15px;text-align:center;">
+        <div style="font-size:48px;">💳</div>
+        <h3>UPI Payment</h3>
+        <p>UPI ID जोड़ने के बाद यहाँ payment button काम करेगा।</p>
+      </div>
+
+      <button class="primary" id="upiBtn">💰 Pay via UPI</button>
+    </div>
+
+    <div class="card">
+      <h3>📞 Contact</h3>
+      <p>Donation से संबंधित जानकारी के लिए contact करें।</p>
+      <button class="primary" id="donationWhatsApp">WhatsApp</button>
+    </div>
+  `
+};
+
+function activate(page) {
+  navItems.forEach(item =>
+    item.classList.toggle('active', item.dataset.page === page)
+  );
+}
+
+function showPage(page) {
+  if (page === 'home') {
+    location.hash = '';
+    location.reload();
+    return;
+  }
+
+  main.innerHTML = pages[page] || '<div class="card"><h3>Page not found</h3></div>';
+  activate(page);
+
+  if (page === 'profile') setupProfile();
+  if (page === 'donation') setupDonation();
+}
+
+function setupProfile() {
+  document.getElementById('loginBtn').onclick = () => {
+    document.getElementById('loginBox').style.display = 'block';
+  };
+
+  document.getElementById('whatsappBtn').onclick = () => {
+    location.href = 'https://wa.me/919196275188';
+  };
+
+  document.getElementById('emailBtn').onclick = () => {
+    location.href = 'mailto:drprakashji7667@gmail.com';
+  };
+
+  document.getElementById('loginSubmit').onclick = () => {
+    const email = document.getElementById('adminEmail').value.trim();
+    const message = document.getElementById('loginMessage');
+
+    if (email === 'hsquad583@gmail.com') {
+      message.textContent =
+        'Admin email सही है। Secure password authentication अगला step होगा।';
+    } else {
+      message.textContent = 'Invalid admin email.';
+    }
+  };
+}
+
+function setupDonation() {
+  document.getElementById('upiBtn').onclick = () => {
+    alert('UPI ID अभी configure नहीं की गई है।');
+  };
+
+  document.getElementById('donationWhatsApp').onclick = () => {
+    location.href = 'https://wa.me/919196275188?text=Mithila%20Cricket%20donation%20ke%20baare%20mein%20jankari%20chahiye';
+  };
+}
+
+navItems.forEach(item => {
+  item.addEventListener('click', () => showPage(item.dataset.page));
+});
+
+const supportButton = document.querySelector('.support .primary');
+if (supportButton) {
+  supportButton.onclick = () => showPage('donation');
+}
+</script>
+
+</body>
+</html>
