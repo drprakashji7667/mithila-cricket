@@ -212,7 +212,6 @@ button{
 </head>
 
 <body>
-<div id="jsTest" style="position:fixed;top:0;left:0;right:0;z-index:10000;background:#111;color:white;text-align:center;padding:8px;font-size:13px;">JavaScript test: loading...</div>
 
 
 <header class="header">
@@ -360,6 +359,11 @@ button{
         Home
     </div>
 
+    <div class="nav-item" data-page="testmatch">
+        <span class="nav-icon">🏏</span>
+        Test Match
+    </div>
+
     <div class="nav-item" data-page="matches">
         <span class="nav-icon">🏏</span>
         Matches
@@ -384,8 +388,6 @@ button{
 
 
 <script>
-document.getElementById('jsTest').textContent = 'JavaScript: WORKING ✓';
-document.getElementById('jsTest').onclick = () => alert('Touch + JavaScript WORKING');
 
 const main = document.querySelector('main');
 const navItems = document.querySelectorAll('#bottomNav .nav-item');
@@ -438,6 +440,67 @@ const pages = {
     </div>
   `,
 
+  testmatch: `
+    <div class="section-title">
+      <h2>🏏 Test Match Registration</h2>
+      <p>अपना registration करके selection के लिए apply करें।</p>
+    </div>
+
+    <div class="card">
+      <h3>📝 Player Registration</h3>
+
+      <input id="tmName" type="text"
+        placeholder="पूरा नाम"
+        style="width:100%;padding:12px;margin:6px 0;">
+
+      <input id="tmMobile" type="tel"
+        placeholder="मोबाइल नंबर"
+        style="width:100%;padding:12px;margin:6px 0;">
+
+      <label>जन्म तारीख</label>
+      <input id="tmDob" type="date"
+        style="width:100%;padding:12px;margin:6px 0;">
+
+      <textarea id="tmAddress"
+        placeholder="पूरा पता"
+        style="width:100%;padding:12px;margin:6px 0;min-height:90px;"></textarea>
+
+      <select id="tmRole"
+        style="width:100%;padding:12px;margin:6px 0;">
+        <option value="">Playing Role चुनें</option>
+        <option>Batsman</option>
+        <option>Bowler</option>
+        <option>All-rounder</option>
+        <option>Wicketkeeper</option>
+      </select>
+
+      <label style="display:block;margin-top:12px;">
+        📸 Profile Photo
+      </label>
+      <input id="tmPhoto" type="file" accept="image/*"
+        style="width:100%;margin:8px 0;">
+
+      <label style="display:block;margin-top:12px;">
+        🪪 Aadhaar Card
+      </label>
+      <input id="tmAadhaar" type="file"
+        accept="image/*,.pdf"
+        style="width:100%;margin:8px 0;">
+
+      <p style="font-size:12px;">
+        🔒 Aadhaar केवल verification के लिए admin को उपलब्ध होगा।
+        इसे public player profile में नहीं दिखाया जाएगा।
+      </p>
+
+      <button class="primary" id="testMatchSubmit">
+        🏏 Submit Registration
+      </button>
+
+      <p id="testMatchMessage"
+        style="margin-top:12px;font-weight:bold;"></p>
+    </div>
+  `,
+
   donation: `
     <div class="section-title"><h2>💙 Support Mithila Cricket</h2></div>
 
@@ -446,9 +509,11 @@ const pages = {
       <p>ग्रामीण खिलाड़ियों और cricket activities को support करने के लिए donation कर सकते हैं।</p>
 
       <div style="margin:18px 0;padding:20px;background:#f4f6f8;border-radius:15px;text-align:center;">
-        <div style="font-size:48px;">💳</div>
-        <h3>UPI Payment</h3>
-        <p>UPI ID जोड़ने के बाद यहाँ payment button काम करेगा।</p>
+        <h3>💳 UPI Payment</h3>
+        <p><b>UPI ID:</b> 8866521449@axl</p>
+        <img src="upi-qr.png" alt="Mithila Cricket UPI QR"
+             style="width:240px;max-width:80%;border-radius:12px;margin:15px auto;display:block;background:white;padding:10px;">
+        <p>QR scan करके सीधे donation कर सकते हैं।</p>
       </div>
 
       <button class="primary" id="upiBtn">💰 Pay via UPI</button>
@@ -478,6 +543,7 @@ function showPage(page) {
   main.innerHTML = pages[page] || '<div class="card"><h3>Page not found</h3></div>';
   activate(page);
 
+  if (page === 'testmatch') setupTestMatch();
   if (page === 'profile') setupProfile();
   if (page === 'donation') setupDonation();
 }
@@ -495,16 +561,383 @@ function setupProfile() {
     location.href = 'mailto:drprakashji7667@gmail.com';
   };
 
-  document.getElementById('loginSubmit').onclick = () => {
+  document.getElementById('loginSubmit').onclick = async () => {
     const email = document.getElementById('adminEmail').value.trim();
+    const password = document.getElementById('adminPassword').value;
     const message = document.getElementById('loginMessage');
 
-    if (email === 'hsquad583@gmail.com') {
-      message.textContent =
-        'Admin email सही है। Secure password authentication अगला step होगा।';
-    } else {
-      message.textContent = 'Invalid admin email.';
+    if (email !== 'hsquad583@gmail.com') {
+      message.textContent = '❌ Invalid admin email or password.';
+      return;
     }
+
+    try {
+      const response = await fetch('http://127.0.0.1:3000/admin/login', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({email, password})
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Login failed');
+      }
+
+      localStorage.setItem('adminKey', result.adminKey);
+
+      message.innerHTML = `
+        <div style="margin-top:15px;padding:18px;background:#eefaf0;border-radius:12px;">
+          <h3>✅ Admin Login Successful</h3>
+          <p>Welcome, Admin.</p>
+          <button class="primary" id="adminDashboardBtn">⚙️ Open Admin Dashboard</button>
+        </div>
+      `;
+
+      document.getElementById('adminDashboardBtn').onclick = () => {
+        main.innerHTML = `
+          <div class="section-title">
+            <h2>⚙️ Admin Dashboard</h2>
+            <p>Manage Mithila Cricket</p>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;">
+            <div class="card">
+              <h3>📊 Overview</h3>
+              <p>Registrations: <b id="regCount">0</b></p>
+              <p>Players: <b>0</b></p>
+              <p>Teams: <b>0</b></p>
+              <p>Matches: <b>0</b></p>
+            </div>
+
+            <div class="card">
+              <h3>🏏 Test Match</h3>
+              <p>New player registrations</p>
+              <button class="primary" id="registrationsBtn">📋 Registrations</button>
+            </div>
+
+            <div class="card">
+              <h3>⭐ Players</h3>
+              <p>Verified players manage करें।</p>
+              <button class="primary" id="playersAdminBtn">👥 Manage Players</button>
+            </div>
+
+            <div class="card">
+              <h3>👥 Teams</h3>
+              <p>Teams create और manage करें।</p>
+              <button class="primary" id="teamsAdminBtn">Manage Teams</button>
+            </div>
+
+            <div class="card">
+              <h3>🏏 Matches</h3>
+              <p>Matches और scores manage करें।</p>
+              <button class="primary" id="matchesAdminBtn">Manage Matches</button>
+            </div>
+
+            <div class="card">
+              <h3>📰 News</h3>
+              <p>News और announcements publish करें।</p>
+              <button class="primary" id="newsAdminBtn">Manage News</button>
+            </div>
+
+            <div class="card">
+              <h3>📸 Gallery</h3>
+              <p>Match और player photos manage करें।</p>
+              <button class="primary" id="galleryAdminBtn">Manage Gallery</button>
+            </div>
+
+            <div class="card">
+              <h3>💰 Donation</h3>
+              <p>UPI और donation settings.</p>
+              <button class="primary" id="donationAdminBtn">Donation Settings</button>
+            </div>
+
+            <div class="card">
+              <h3>📢 Notifications</h3>
+              <p>Players/users के लिए announcements.</p>
+              <button class="primary" id="notificationAdminBtn">Notifications</button>
+            </div>
+
+            <div class="card">
+              <h3>📞 Contact</h3>
+              <p>Phone, WhatsApp और email manage करें।</p>
+              <button class="primary" id="contactAdminBtn">Contact Settings</button>
+            </div>
+
+            <div class="card">
+              <h3>⚙️ Settings</h3>
+              <p>App की basic settings.</p>
+              <button class="primary" id="settingsAdminBtn">App Settings</button>
+            </div>
+
+            <div class="card">
+              <h3>🔐 Security</h3>
+              <p>Admin account और logout.</p>
+              <button class="secondary" id="logoutAdminBtn">Logout</button>
+            </div>
+          </div>
+
+          <div id="adminPanelContent" style="margin-top:18px;"></div>
+        `;
+
+        const content = document.getElementById('adminPanelContent');
+
+        const showPanel = (title, text) => {
+          content.innerHTML = `
+            <div class="card">
+              <h3>${title}</h3>
+              <p>${text}</p>
+            </div>
+          `;
+        };
+
+        document.getElementById('playersAdminBtn').onclick =
+          () => showPanel('⭐ Manage Players', 'Verified players यहाँ manage होंगे।');
+
+        document.getElementById('teamsAdminBtn').onclick =
+          () => showPanel('👥 Manage Teams', 'Teams यहाँ manage होंगी।');
+
+        document.getElementById('matchesAdminBtn').onclick = async () => {
+          const content = document.getElementById('adminPanelContent');
+          const adminKey = localStorage.getItem('adminKey');
+
+          content.innerHTML = `
+            <div class="card">
+              <h3>🏏 Pending Test Match Registrations</h3>
+              <p>Loading...</p>
+            </div>
+          `;
+
+          try {
+            const response = await fetch(
+              'http://127.0.0.1:3000/admin/test-match/pending',
+              {
+                headers: {
+                  'x-admin-key': adminKey
+                }
+              }
+            );
+
+            const data = await response.json();
+
+            if (!response.ok) {
+              throw new Error(data.error || 'Failed to load registrations');
+            }
+
+            if (!data.length) {
+              content.innerHTML = `
+                <div class="card">
+                  <h3>🏏 Pending Test Match Registrations</h3>
+                  <p>✅ कोई pending registration नहीं है।</p>
+                </div>
+              `;
+              return;
+            }
+
+            content.innerHTML = `
+              <div class="card">
+                <h3>🏏 Pending Test Match Registrations</h3>
+                <div id="pendingRegistrations"></div>
+              </div>
+            `;
+
+            const list = document.getElementById('pendingRegistrations');
+
+            data.forEach(reg => {
+              const card = document.createElement('div');
+              card.className = 'card';
+              card.style.marginTop = '12px';
+
+              card.innerHTML = `
+                <h3>${reg.name || 'Unnamed Player'}</h3>
+                <p><b>Registration ID:</b> ${reg.id}</p>
+                <p><b>Mobile:</b> ${reg.mobile || reg.phone || '-'}</p>
+                <p><b>Email:</b> ${reg.email || '-'}</p>
+                <p><b>Age:</b> ${reg.age || '-'}</p>
+                <p><b>Address:</b> ${reg.address || '-'}</p>
+                <p><b>Status:</b> ${reg.status || 'pending'}</p>
+
+                <button class="primary verifyBtn">
+                  ✅ Verify & Add Player
+                </button>
+
+                <button class="secondary rejectBtn">
+                  ❌ Reject
+                </button>
+              `;
+
+              card.querySelector('.verifyBtn').onclick = async () => {
+                if (!confirm('इस registration को verify करके player में add करें?')) {
+                  return;
+                }
+
+                try {
+                  const verifyResponse = await fetch(
+                    `http://127.0.0.1:3000/admin/test-match/${reg.id}/verify`,
+                    {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json',
+                        'x-admin-key': adminKey
+                      }
+                    }
+                  );
+
+                  const result = await verifyResponse.json();
+
+                  if (!verifyResponse.ok) {
+                    throw new Error(
+                      result.error || 'Verification failed'
+                    );
+                  }
+
+                  alert('✅ Player successfully verified!');
+
+                  document.getElementById('matchesAdminBtn').click();
+
+                } catch (error) {
+                  alert('❌ ' + error.message);
+                }
+              };
+
+              card.querySelector('.rejectBtn').onclick = () => {
+                alert('Reject API अभी backend में उपलब्ध नहीं है।');
+              };
+
+              list.appendChild(card);
+            });
+
+          } catch (error) {
+            content.innerHTML = `
+              <div class="card">
+                <h3>❌ Error</h3>
+                <p>${error.message}</p>
+              </div>
+            `;
+          }
+        };
+
+        document.getElementById('newsAdminBtn').onclick =
+          () => showPanel('📰 Manage News', 'News और announcements यहाँ manage होंगे।');
+
+        document.getElementById('galleryAdminBtn').onclick =
+          () => showPanel('📸 Gallery', 'Match और player photos यहाँ manage होंगे।');
+
+        document.getElementById('donationAdminBtn').onclick =
+          () => showPanel('💰 Donation Settings', 'Donation settings यहाँ manage होंगी।');
+
+        document.getElementById('notificationAdminBtn').onclick =
+          () => showPanel('📢 Notifications', 'User announcements यहाँ manage होंगे।');
+
+        document.getElementById('contactAdminBtn').onclick =
+          () => showPanel('📞 Contact Settings', 'Phone, WhatsApp और email settings.');
+
+        document.getElementById('settingsAdminBtn').onclick =
+          () => showPanel('⚙️ App Settings', 'Application settings यहाँ manage होंगी।');
+
+        document.getElementById('logoutAdminBtn').onclick = () => {
+          localStorage.removeItem('adminKey');
+          main.innerHTML = `
+            <div class="card" style="text-align:center;">
+              <h3>🔐 Logged Out</h3>
+              <p>Admin session closed.</p>
+            </div>
+          `;
+        };
+      };
+    } catch (error) {
+      message.textContent = '❌ ' + error.message;
+    }
+  };
+}
+
+async function setupTestMatch() {
+  const submit = document.getElementById('testMatchSubmit');
+  const message = document.getElementById('testMatchMessage');
+
+  submit.onclick = async () => {
+    const name = document.getElementById('tmName').value.trim();
+    const mobile = document.getElementById('tmMobile').value.trim();
+    const dob = document.getElementById('tmDob').value;
+    const address = document.getElementById('tmAddress').value.trim();
+    const playing_role = document.getElementById('tmRole').value;
+
+    const photoInput = document.getElementById('tmPhoto');
+    const aadhaarInput = document.getElementById('tmAadhaar');
+
+    const photo = photoInput.files[0];
+    const aadhaar = aadhaarInput.files[0];
+
+    if (!name || !mobile) {
+      message.textContent = '❌ नाम और मोबाइल नंबर जरूरी है।';
+      return;
+    }
+
+    if (!photo) {
+      message.textContent = '❌ Profile Photo चुनना जरूरी है।';
+      return;
+    }
+
+    if (!aadhaar) {
+      message.textContent = '❌ Aadhaar Card चुनना जरूरी है।';
+      return;
+    }
+
+    if (photo.size > 5 * 1024 * 1024) {
+      message.textContent = '❌ Profile Photo 5MB से छोटी होनी चाहिए।';
+      return;
+    }
+
+    if (aadhaar.size > 5 * 1024 * 1024) {
+      message.textContent = '❌ Aadhaar file 5MB से छोटी होनी चाहिए।';
+      return;
+    }
+
+    submit.disabled = true;
+    submit.textContent = '⏳ Uploading...';
+
+    try {
+      const formData = new FormData();
+
+      formData.append('name', name);
+      formData.append('mobile', mobile);
+      formData.append('dob', dob || '');
+      formData.append('address', address);
+      formData.append('playing_role', playing_role);
+      formData.append('profile_photo', photo);
+      formData.append('aadhaar', aadhaar);
+
+      const response = await fetch(
+        'http://127.0.0.1:3000/test-match/register',
+        {
+          method: 'POST',
+          body: formData
+        }
+      );
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Registration failed');
+      }
+
+      message.textContent =
+        '✅ Registration सफल! आपका आवेदन Admin verification के लिए भेज दिया गया है।';
+
+      document.getElementById('tmName').value = '';
+      document.getElementById('tmMobile').value = '';
+      document.getElementById('tmDob').value = '';
+      document.getElementById('tmAddress').value = '';
+      document.getElementById('tmRole').value = '';
+      photoInput.value = '';
+      aadhaarInput.value = '';
+
+    } catch (error) {
+      message.textContent = '❌ ' + error.message;
+    }
+
+    submit.disabled = false;
+    submit.textContent = '🏏 Submit Registration';
   };
 }
 
