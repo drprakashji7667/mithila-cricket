@@ -423,9 +423,15 @@ const pages = {
         placeholder="Admin Email"
         style="width:100%;padding:12px;margin:6px 0;border:1px solid #ddd;border-radius:10px;">
 
-      <input id="adminPassword" type="password"
-        placeholder="Password"
-        style="width:100%;padding:12px;margin:6px 0;border:1px solid #ddd;border-radius:10px;">
+      <div style="position:relative;margin:6px 0;">
+  <input id="adminPassword" type="password"
+    placeholder="Password"
+    style="width:100%;padding:12px 45px 12px 12px;border:1px solid #ddd;border-radius:10px;">
+  <button type="button" id="togglePassword"
+    style="position:absolute;right:6px;top:6px;width:38px;height:38px;margin:0;padding:0;background:transparent;color:#17202a;font-size:20px;border:none;">
+    👁️
+  </button>
+</div>
 
       <button class="primary" id="loginSubmit">Login</button>
       <p id="loginMessage" style="margin-top:10px;"></p>
@@ -548,9 +554,27 @@ function showPage(page) {
   if (page === 'donation') setupDonation();
 }
 
+function setupPasswordEye() {
+  const password = document.getElementById('adminPassword');
+  const toggle = document.getElementById('togglePassword');
+
+  if (!password || !toggle) return;
+
+  toggle.onclick = () => {
+    if (password.type === 'password') {
+      password.type = 'text';
+      toggle.textContent = '🙈';
+    } else {
+      password.type = 'password';
+      toggle.textContent = '👁️';
+    }
+  };
+}
+
 function setupProfile() {
   document.getElementById('loginBtn').onclick = () => {
     document.getElementById('loginBox').style.display = 'block';
+    setupPasswordEye();
   };
 
   document.getElementById('whatsappBtn').onclick = () => {
