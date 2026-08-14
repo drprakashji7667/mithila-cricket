@@ -247,7 +247,18 @@ app.post(
     }
   }
 );
+/* Admin: Total Test Match registrations */
+app.get('/admin/test-match/count', adminKey, async (req, res) => {
+  const { count, error } = await supabase
+    .from('test_match_registrations')
+    .select('*', { count: 'exact', head: true });
 
+  if (error) {
+    return res.status(500).json({ error: error.message });
+  }
+
+  res.json({ count: count || 0 });
+});
 /* Admin: View pending Test Match registrations */
 app.get('/admin/test-match/pending', adminKey, async (req, res) => {
   const { data, error } = await supabase
