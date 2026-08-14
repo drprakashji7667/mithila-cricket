@@ -682,6 +682,44 @@ function setupProfile() {
 
         const content = document.getElementById('adminPanelContent');
 
+// Live total registration counter
+const updateRegistrationCount = async () => {
+  try {
+    const adminKey = localStorage.getItem('adminKey');
+    if (!adminKey) return;
+
+    const response = await fetch(
+      'https://mithila-cricket-2.onrender.com/admin/test-match/count',
+      {
+        headers: {
+          'x-admin-key': adminKey
+        }
+      }
+    );
+
+    const data = await response.json();
+
+    if (response.ok) {
+      const counter = document.getElementById('regCount');
+      if (counter) {
+        counter.textContent = data.total;
+      }
+    }
+  } catch (error) {
+    console.error('Registration count error:', error);
+  }
+};
+
+updateRegistrationCount();
+
+if (window.registrationCountTimer) {
+  clearInterval(window.registrationCountTimer);
+}
+
+window.registrationCountTimer = setInterval(updateRegistrationCount, 10000);
+
+
+
         const showPanel = (title, text) => {
           content.innerHTML = `
             <div class="card">

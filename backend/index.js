@@ -396,6 +396,19 @@ app.post('/admin/login', (req, res) => {
   res.status(401).json({ error: 'Invalid email or password' });
 });
 
+/* Admin: Total Test Match registrations */
+app.get('/admin/test-match/count', adminKey, async (req, res) => {
+  const { count, error } = await supabase
+    .from('test_match_registrations')
+    .select('id', { count: 'exact', head: true });
+
+  if (error) {
+    return res.status(500).json({ error: error.message });
+  }
+
+  res.json({ total: count || 0 });
+});
+
 /* Admin: Add player */
 app.post('/admin/players', adminKey, async (req, res) => {
   const {
